@@ -1,7 +1,7 @@
-import AWS from "aws-sdk";
-import sharp from "sharp";
-import { encode } from "blurhash";
-import { Client } from "pg";
+const AWS = require("aws-sdk");
+const sharp = require("sharp");
+const { encode } = require("blurhash");
+const { Client } = require("pg");
 
 const s3 = new AWS.S3();
 const dbClient = new Client({
@@ -13,7 +13,7 @@ const dbClient = new Client({
 });
 const cdnUrl = process.env.CDN_URL;
 
-export const handler = async (event) => {
+exports.handler = async (event) => {
   try {
     const record = event.Records[0];
     const bucket = record.s3.bucket.name;
