@@ -36,3 +36,9 @@ jobs:
           CDN_URL: ${{ secrets.CDN_URL }}
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          LAMBDA_SECURITY_GROUP_ID: ${{ secrets.LAMBDA_SECURITY_GROUP_ID }}
+          SUBNET_ID_1: ${{ secrets.SUBNET_ID_1 }}
+          SUBNET_ID_2: ${{ secrets.SUBNET_ID_2 }}
+          SUBNET_ID_3: ${{ secrets.SUBNET_ID_3 }}
+          SUBNET_ID_4: ${{ secrets.SUBNET_ID_4 }}
+          SUBNET_ID_5: ${{ secrets.SUBNET_ID_5 }}

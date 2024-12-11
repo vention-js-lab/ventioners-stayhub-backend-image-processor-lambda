@@ -1,8 +1,8 @@
-service: image-processor-service
+service: image-processing-service
 
 provider:
   name: aws
-  runtime: nodejs22.x
+  runtime: nodejs18.x
   region: us-east-1
   environment:
     NODE_ENV: production
@@ -12,15 +12,36 @@ provider:
     DB_NAME: ${env:DB_NAME}
     DB_PORT: ${env:DB_PORT}
     CDN_URL: ${env:CDN_URL}
+    S3_PROCESSED_BUCKET_NAME: stayhub-images-processed
+  vpc:
+    securityGroupIds:
+      - sg-${env:LAMBDA_SECURITY_GROUP_ID}
+    subnetIds:
+      - subnet-${env:SUBNET_ID_1}
+      - subnet-${env:SUBNET_ID_2}
+      - subnet-${env:SUBNET_ID_3}
+      - subnet-${env:SUBNET_ID_4}
+      - subnet-${env:SUBNET_ID_5}
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - ec2:CreateNetworkInterface
+        - ec2:DescribeNetworkInterfaces
+        - ec2:DeleteNetworkInterface
+      Resource: "*"
   iam:
     role:
       statements:
         - Effect: Allow
           Action:
             - s3:GetObject
-            - s3:PutObject
           Resource:
             - arn:aws:s3:::stayhub-images/*
+        - Effect: Allow
+          Action:
+            - s3:PutObject
+          Resource:
+            - arn:aws:s3:::stayhub-images-processed/*
         - Effect: Allow
           Action:
             - rds-db:connect
@@ -36,5 +57,3 @@ functions:
           bucket: stayhub-images
           existing: true
           event: s3:ObjectCreated:*
-          rules:
-            - prefix: uncompressed-
