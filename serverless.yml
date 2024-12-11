@@ -1,0 +1,40 @@
+service: image-processor-service
+
+provider:
+  name: aws
+  runtime: nodejs22.x
+  region: us-east-1
+  environment:
+    NODE_ENV: production
+    DB_HOST: ${env:DB_HOST}
+    DB_USER: ${env:DB_USER}
+    DB_PASSWORD: ${env:DB_PASSWORD}
+    DB_NAME: ${env:DB_NAME}
+    DB_PORT: ${env:DB_PORT}
+    CDN_URL: ${env:CDN_URL}
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action:
+            - s3:GetObject
+            - s3:PutObject
+          Resource:
+            - arn:aws:s3:::stayhub-images/*
+        - Effect: Allow
+          Action:
+            - rds-db:connect
+          Resource: "*"
+
+functions:
+  imageProcessor:
+    handler: src/handlers/image-processor.handler
+    timeout: 30
+    memorySize: 256
+    events:
+      - s3:
+          bucket: stayhub-images
+          event: s3:ObjectCreated:*
+          rules:
+            - prefix: uncompressed-
+            - suffix: .jpeg
