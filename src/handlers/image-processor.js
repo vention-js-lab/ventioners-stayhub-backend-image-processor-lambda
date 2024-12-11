@@ -4,16 +4,17 @@ const { encode } = require("blurhash");
 const { Client } = require("pg");
 
 const s3 = new AWS.S3();
-const dbClient = new Client({
-  host: process.env.DB_HOST,
-  user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
-  database: process.env.DB_NAME,
-  port: process.env.DB_PORT,
-});
 const cdnUrl = process.env.CDN_URL;
 
 exports.handler = async (event) => {
+  const dbClient = new Client({
+    host: process.env.DB_HOST,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_NAME,
+    port: process.env.DB_PORT,
+  });
+
   try {
     const record = event.Records[0];
     const bucket = record.s3.bucket.name;
