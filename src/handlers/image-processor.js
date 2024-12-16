@@ -47,8 +47,6 @@ exports.handler = async (event) => {
       })
       .promise();
 
-    console.log("After getting s3 metadata:", Metadata);
-
     const accommodationId = Metadata["accommodation-id"];
     const uploadIndex = Metadata["upload-index"];
 
@@ -59,8 +57,6 @@ exports.handler = async (event) => {
     const { Body: imageBuffer } = await s3
       .getObject({ Bucket: bucket, Key: key })
       .promise();
-
-    console.log("Image buffer:", imageBuffer);
 
     const sharpInstance = sharp(imageBuffer);
 
