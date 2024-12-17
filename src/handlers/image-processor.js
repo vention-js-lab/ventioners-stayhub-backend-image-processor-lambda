@@ -62,19 +62,8 @@ exports.handler = async (event) => {
 
     const [fullSizeBuffer, thumbnailBuffer, { data, info }] = await Promise.all(
       [
-        sharpInstance
-          .clone()
-          .resize({ width: 1280, height: 720 })
-          .jpeg({ quality: 80 })
-          .toBuffer(),
-        sharpInstance
-          .clone()
-          .resize({
-            width: 854,
-            height: 480,
-          })
-          .jpeg({ quality: 80 })
-          .toBuffer(),
+        sharpInstance.clone().jpeg({ quality: 80 }).toBuffer(),
+        sharpInstance.clone().jpeg({ quality: 70 }).toBuffer(),
         sharpInstance
           .clone()
           .resize({ width: 240, height: 427 })
