@@ -3,21 +3,13 @@ const sharp = require("sharp");
 const { encode } = require("blurhash");
 const { Client } = require("pg");
 
-console.log("Start...");
-
 const s3 = new AWS.S3();
-
-console.log("Connecting to S3...");
 
 const cdnUrl = process.env.CDN_URL;
 const processedImagesBucketName = process.env.S3_PROCESSED_BUCKET_NAME;
 
-console.log("GETTING ENV VARIABLES");
-
 exports.handler = async (event) => {
-  console.log("STARTING HANDLER");
-
-  console.log("EVENT:", event);
+  console.log("EVENT: ", event);
 
   const dbClient = new Client({
     host: process.env.DB_HOST,
@@ -31,14 +23,10 @@ exports.handler = async (event) => {
     },
   });
 
-  console.log("CONNECTING TO DB");
-
   try {
     const record = event.Records[0];
     const bucket = record.s3.bucket.name;
     const key = decodeURIComponent(record.s3.object.key.replace(/\+/g, " "));
-
-    console.log("S3 METADATA START:", record);
 
     const { Metadata } = await s3
       .headObject({
@@ -73,7 +61,7 @@ exports.handler = async (event) => {
       ],
     );
 
-    console.log("Image processed and resized");
+    console.log("Images processed and resized");
 
     const blurhash = encode(
       new Uint8ClampedArray(data),
@@ -140,8 +128,6 @@ exports.handler = async (event) => {
     ];
 
     const result = await dbClient.query(query, values);
-
-    console.log("Database update result:", result);
 
     if (result.rowCount === 0) {
       console.warn(
